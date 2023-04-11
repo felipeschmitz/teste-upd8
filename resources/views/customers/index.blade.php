@@ -43,7 +43,7 @@
                                         </td>
                                         <td class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap" x-text="item.name"></td>
                                         <td class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap" x-text="item.document"></td>
-                                        <td class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap" x-text="item.birthdate"></td>
+                                        <td class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap" x-text="new Date(item.birthdate).toLocaleDateString()"></td>
                                         <td class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap" x-text="item.state"></td>
                                         <td class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap" x-text="item.city"></td>
                                         <td class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap uppercase" x-text="item.gender"></td>

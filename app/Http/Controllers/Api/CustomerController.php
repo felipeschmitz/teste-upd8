@@ -42,7 +42,7 @@ class CustomerController extends Controller
             $customers->where('city', 'like', "%{$city}%");
         }
 
-        $newCustomers = $customers->paginate();
+        $newCustomers = $customers->orderBy('created_at', 'desc')->paginate();
 
         return CustomerResource::collection($newCustomers);
     }

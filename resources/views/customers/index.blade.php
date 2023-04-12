@@ -7,7 +7,7 @@
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
-                <div x-data="getCustomers()" class="p-6 text-gray-900 dark:text-gray-100">
+                <div x-data="app()" class="p-6 text-gray-900 dark:text-gray-100">
                     @include('customers._filters')
                     <div class="overflow-x-auto flex my-8 rounded-md">
                         <table class="min-w-full">
@@ -61,7 +61,7 @@
     </div>
     <script>
         document.addEventListener('alpine:init', () => {
-            Alpine.data('getCustomers', () => ({
+            Alpine.data('app', () => ({
                 customers: [],
                 nextPageUrl: null,
                 applyFilter: false,

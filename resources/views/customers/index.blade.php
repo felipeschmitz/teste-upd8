@@ -9,7 +9,7 @@
             <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
                 <div x-data="getCustomers()" class="p-6 text-gray-900 dark:text-gray-100">
                     @include('customers._filters')
-                    <div class="overflow-x-auto flex mt-8 rounded-md">
+                    <div class="overflow-x-auto flex my-8 rounded-md">
                         <table class="min-w-full">
                             <thead class="bg-gray-200 border-b">
                                 <tr>
@@ -52,13 +52,20 @@
                             </body>
                         </table>
                     </div>
+                    <div class="flex justify-center">
+                        <div class="flex items-center space-x-1">
+                            <template x-for="paginate in customers.meta?.links" :key="paginate.label">
+                                <a href="#" class="px-4 py-2 text-gray-700 bg-gray-200 rounded-md hover:bg-blue-400 hover:text-white" :class="{ 'bg-blue-500 text-white' : paginate.active }" x-html="paginate.label"></a>
+                            </template>
+
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
     <script>
         document.addEventListener('alpine:init', () => {
-            console.log('load alpine');
             Alpine.data('getCustomers', () => ({
                 customers: [],
                 filter: {
@@ -71,6 +78,7 @@
                 },
                 async init() {
                     this.customers = await (await fetch('/api/customers')).json()
+                    console.log(this.customers.meta?.links)
                 },
                 async applyFilters() {
                     let url = '/api/customers';

@@ -69,7 +69,7 @@
                         </div>
                         <div class="flex items-center lg:justify-end space-x-2">
                             <div class="flex space-x-4">
-                                <button type="submit" class="px-5 py-3 bg-green-500 hover:bg-green-800 rounded-full">Pesquisar</button>
+                                <button type="submit" class="px-5 py-3 bg-green-500 hover:bg-green-800 rounded-full disabled:opacity-75" :disabled="!applyFilter">Pesquisar</button>
                                 <button type="button" class="px-5 py-3 bg-pink-500 hover:bg-pink-800 rounded-full" @click="resetFilter()">Limpar</button>
                             </div>
                         </div>

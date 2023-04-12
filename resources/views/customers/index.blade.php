@@ -24,7 +24,7 @@
                                 </tr>
                             </thead>
                             <body>
-                                <template x-for="item in customers.data" :key="item.id">
+                                <template x-for="item in customers">
                                     <tr class="bg-white border-b transition duration-300 ease-in-out hover:bg-gray-100">
                                         <td class="px-3 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
                                             <a x-bind:href="'/customers/' + item.id + '/edit'" class="flex bg-blue-500 hover:bg-blue-800 rounded text-white px-3 py-2 text-sm">
@@ -53,12 +53,7 @@
                         </table>
                     </div>
                     <div class="flex justify-center">
-                        <div class="flex items-center space-x-1">
-                            <template x-for="paginate in customers.meta?.links" :key="paginate.label">
-                                <a href="#" class="px-4 py-2 text-gray-700 bg-gray-200 rounded-md hover:bg-blue-400 hover:text-white" :class="{ 'bg-blue-500 text-white' : paginate.active }" x-html="paginate.label"></a>
-                            </template>
-
-                        </div>
+                        <button class="px-4 py-2 text-gray-700 bg-gray-200 rounded-md disabled:opacity-75" @click="loadRegisters()" :disabled="nextPageUrl === null">Carregar mais dados</button>
                     </div>
                 </div>
             </div>
@@ -68,6 +63,8 @@
         document.addEventListener('alpine:init', () => {
             Alpine.data('getCustomers', () => ({
                 customers: [],
+                nextPageUrl: null,
+                applyFilter: false,
                 filter: {
                     document: '',
                     name: '',
@@ -76,18 +73,37 @@
                     state: '',
                     city: '',
                 },
-                async init() {
-                    this.customers = await (await fetch('/api/customers')).json()
-                    console.log(this.customers.meta?.links)
-                },
-                async applyFilters() {
-                    let url = '/api/customers';
-                    url += '?';
+                async loadRegisters() {
+                    let url = this.nextPageUrl ? this.nextPageUrl + '&' : '{{ route("api.customers.index") }}?'
+
                     for (let k in this.filter) { url += k + "=" + this.filter[k] + "&"; }
                     url = encodeURI(url.slice(0, -1));
-                    this.customers = await (await fetch(url)).json()
+
+                    const {data, links, meta} = await (await fetch(url)).json()
+
+                    this.customers = this.customers.concat(data)
+                    console.log(this.applyFilter, this.nextPageUrl, url)
+                    this.nextPageUrl = links.next
+                },
+                async init() {
+                    this.$watch('filter.document', value => this.applyFilter = value ? true : false)
+                    this.$watch('filter.name', value => this.applyFilter = value ? true : false)
+                    this.$watch('filter.birthdate', value => this.applyFilter = value ? true : false)
+                    this.$watch('filter.gender', value => this.applyFilter = value ? true : false)
+                    this.$watch('filter.state', value => this.applyFilter = value ? true : false)
+                    this.$watch('filter.city', value => this.applyFilter = value ? true : false)
+                    this.$watch('applyFilter', value => this.nextPageUrl = value ? null : this.nextPageUrl)
+
+
+                    this.loadRegisters()
+                },
+                async applyFilters() {
+                    this.customers = []
+                    this.loadRegisters()
                 },
                 async resetFilter() {
+                    this.customers = []
+                    this.applyFilter = false
                     this.filter = {
                         document: '',
                         name: '',
@@ -96,7 +112,7 @@
                         state: '',
                         city: '',
                     };
-                    this.customers = await (await fetch('/api/customers')).json()
+                    this.loadRegisters()
                 }
             }))
         })

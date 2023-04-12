@@ -198,8 +198,6 @@
                                 this.success = false
                             }, 3000);
                         }
-
-                        console.log(data)
                     } catch (error) {
                         const { errors } = error.response.data
 

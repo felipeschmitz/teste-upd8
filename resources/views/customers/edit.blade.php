@@ -189,8 +189,6 @@
                         const { data } = await axios.get('{{ route("api.customers.show", request()->segment(2))}}')
 
                         this.form = data.data
-
-                        console.log(data.data)
                     } catch (error) {
                         window.location = '{{ route("customers.index") }}'
                     }
@@ -207,10 +205,8 @@
 
                             setTimeout(() => {
                                 this.success = false
-                            }, 3000);
+                            }, 3000)
                         }
-
-                        console.log(data)
                     } catch (error) {
                         const { errors } = error.response.data
 

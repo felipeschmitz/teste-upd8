@@ -74,16 +74,21 @@
                     city: '',
                 },
                 async loadRegisters() {
-                    let url = this.nextPageUrl ? this.nextPageUrl + '&' : '{{ route("api.customers.index") }}?'
+                    try {
+                        let url = this.nextPageUrl ? this.nextPageUrl + '&' : '{{ route("api.customers.index") }}?'
 
-                    for (let k in this.filter) { url += k + "=" + this.filter[k] + "&"; }
-                    url = encodeURI(url.slice(0, -1));
+                        for (let k in this.filter) { url += k + "=" + this.filter[k] + "&"; }
+                        url = encodeURI(url.slice(0, -1));
 
-                    const {data, links, meta} = await (await fetch(url)).json()
+                        const { data } = await axios.get(url)
 
-                    this.customers = this.customers.concat(data)
-                    console.log(this.applyFilter, this.nextPageUrl, url)
-                    this.nextPageUrl = links.next
+                        this.customers = this.customers.concat(data.data)
+
+                        this.nextPageUrl = data.links.next
+                    } catch (error) {
+
+                    }
+
                 },
                 async init() {
                     this.$watch('filter.document', value => this.applyFilter = value ? true : false)
